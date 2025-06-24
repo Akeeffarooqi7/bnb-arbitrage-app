@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BNB Arbitrage Calculator</title>
+    <meta http-equiv="refresh" content="60">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .card {
+            background-color: white;
+            padding: 25px;
+            width: 450px;
+            margin: auto;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .profit {
+            color: green;
+            font-weight: bold;
+        }
+        .alert {
+            color: red;
+            font-weight: bold;
+        }
+        input[type="number"] {
+            width: 150px;
+            padding: 5px;
+            margin: 5px;
+        }
+        button {
+            padding: 6px 12px;
+        }
+        a {
+            text-decoration: none;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>💸 BNB Arbitrage Profit Calculator</h2>
+
+        <form method="POST">
+            <label>Investment (₹):</label>
+            <input type="number" name="investment" value="{{ investment }}" min="100" step="100">
+            <button type="submit">Calculate</button>
+        </form>
+
+        <hr>
+        <p>🟡 Binance Price: ₹<strong>{{ binance }}</strong></p>
+        <p>🟢 CoinGecko Price: ₹<strong>{{ coingecko }}</strong></p>
+        <p>📦 BNB Bought: <strong>{{ amount_bnb }}</strong></p>
+        <p>📉 Binance Fee (0.1%): ₹{{ binance_fee }}</p>
+        <p>📈 Sell Fee (0.2%): ₹{{ sell_fee }}</p>
+        <p>🔌 Network Fee: ₹{{ network_fee }}</p>
+        <p>💰 Total Cost: ₹{{ total_cost }}</p>
+        <p>💵 Total Sale: ₹{{ total_sale }}</p>
+        <p class="profit">💸 Final Profit: ₹{{ profit }}</p>
+
+        {% if profit > 0 %}
+            <p class="profit">🚀 Opportunity Detected!</p>
+        {% else %}
+            <p class="alert">⚠️ Not Profitable Yet</p>
+        {% endif %}
+
+        <p><a href="/tracker">🔁 Go to Price Tracker</a></p>
+        <p><small>Page auto-refreshes every 60 seconds</small></p>
+    </div>
+</body>
+</html>

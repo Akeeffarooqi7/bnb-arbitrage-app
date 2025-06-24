@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BNB Price Tracker</title>
+    <meta http-equiv="refresh" content="60">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .card {
+            background-color: white;
+            padding: 25px;
+            width: 400px;
+            margin: auto;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .profit {
+            color: green;
+            font-weight: bold;
+        }
+        .loss {
+            color: red;
+            font-weight: bold;
+        }
+        a {
+            text-decoration: none;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>📊 BNB Price Tracker</h2>
+        <p>🟡 Binance Price: ₹<strong>{{ binance }}</strong></p>
+        <p>🟢 CoinGecko Price: ₹<strong>{{ coingecko }}</strong></p>
+
+        {% if profit > 0 %}
+            <p class="profit">📈 Price Difference: ₹{{ profit }} (Arbitrage Possible)</p>
+        {% else %}
+            <p class="loss">📉 Price Difference: ₹{{ profit }} (No Profit Now)</p>
+        {% endif %}
+
+        <p><a href="/calculator">💸 Go to Profit Calculator</a></p>
+        <p><small>Auto-refreshes every 60 seconds</small></p>
+    </div>
+</body>
+</html>
