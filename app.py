@@ -1,8 +1,7 @@
 import os
 from dotenv import load_dotenv
-load_dotenv()
-
 load_dotenv()  # load variables from .env
+
 COINMARKETCAP_API_KEY = os.getenv("COINMARKETCAP_API_KEY")
 
 
@@ -28,27 +27,35 @@ def get_binance_bnb_inr_price():
 
 # API to get CoinGecko BNB to INR
 def get_coinmarketcap_bnb_inr_price():
-    url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
-    headers = {
-        "Accepts": "application/json",
-        "X-CMC_PRO_API_KEY": "YOUR_API_KEY_HERE"
-    }
-    params = {
-        "symbol": "BNB",
-        "convert": "INR"
-    }
+    try:
+        url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
+        headers = {
+            "Accepts": "application/json",
+            "X-CMC_PRO_API_KEY": COINMARKETCAP_API_KEY
+        }
+        params = {
+            "symbol": "BNB",
+            "convert": "INR"
+        }
 
-   response = requests.get(API_URL)
-if response.status_code == 200:
-    json_data = response.json()
-    if 'data' in json_data:
-        data = json_data['data']
-        # process data
-    else:
-        print("⚠️ 'data' key not found in response")
-else:
-    print("❌ API call failed with:", response.status_code)
-    return round(data['data']['BNB']['quote']['INR']['price'], 2)
+        response = requests.get(url, headers=headers, params=params, timeout=10)
+        response.raise_for_status()
+
+        data = response.json()
+        print("📦 CoinMarketCap Response:", data)
+
+        if "data" in data and "BNB" in data["data"]:
+            return round(data["data"]["BNB"]["quote"]["INR"]["price"], 2)
+        else:
+            print("⚠️ Unexpected API response:", data)
+            return 0
+
+    except Exception as e:
+        print("❌ Error getting CoinMarketCap price:", e)
+        return 0
+
+
+
 
 
 
