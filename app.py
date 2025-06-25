@@ -1,3 +1,10 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # load variables from .env
+COINMARKETCAP_API_KEY = os.getenv("COINMARKETCAP_API_KEY")
+
+
 from flask import Flask, render_template, request
 import requests
 
@@ -19,22 +26,27 @@ def get_binance_bnb_inr_price():
         return 0
 
 # API to get CoinGecko BNB to INR
-def get_coingecko_bnb_inr_price():
-    try:
-        url = 'https://api.coingecko.com/api/v3/simple/price?ids=binancecoin&vs_currencies=inr'
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
-        price = float(response.json()['binancecoin']['inr'])
-        print("CoinGecko Price:", price)
-        return price
-    except Exception as e:
-        print("Error getting CoinGecko price:", e)
-        return 0
+def get_coinmarketcap_bnb_inr_price():
+    url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
+    headers = {
+        "Accepts": "application/json",
+        "X-CMC_PRO_API_KEY": "YOUR_API_KEY_HERE"
+    }
+    params = {
+        "symbol": "BNB",
+        "convert": "INR"
+    }
+
+    response = requests.get(url, headers=headers, params=params)
+    data = response.json()
+    return round(data['data']['BNB']['quote']['INR']['price'], 2)
+
+
 
 @app.route('/tracker')
 def tracker():
     binance = get_binance_bnb_inr_price()
-    coingecko = get_coingecko_bnb_inr_price()
+    coingecko = get_coinmarketcap_bnb_inr_price()
     profit = coingecko - binance
     return render_template('tracker.html', binance=binance, coingecko=coingecko, profit=profit)
 
@@ -43,7 +55,7 @@ def calculator():
     investment = 1000
     try:
         binance = get_binance_bnb_inr_price()
-        coingecko = get_coingecko_bnb_inr_price()
+        coingecko = get_coinmarketcap_bnb_inr_price()
 
         if request.method == 'POST':
             investment = float(request.form.get('investment', 1000))
