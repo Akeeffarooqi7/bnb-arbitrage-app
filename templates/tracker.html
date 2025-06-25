@@ -1,51 +1,142 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>BNB Price Tracker</title>
+    <meta charset="UTF-8">
+    <title>📊 BNB Price Tracker</title>
     <meta http-equiv="refresh" content="60">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            text-align: center;
-            margin-top: 50px;
+            font-family: 'Inter', sans-serif;
+            background: url('https://images.unsplash.com/photo-1504384764586-bb4cdc1707b0?auto=format&fit=crop&w=1400&q=80') no-repeat center center fixed;
+            background-size: cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
         }
+
+        /* Smoke Animation Overlay */
+        .overlay {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+            animation: fadeOverlay 1.5s ease-in-out;
+        }
+
+        @keyframes fadeOverlay {
+            0%   { opacity: 0.9; }
+            50%  { opacity: 0.3; }
+            100% { opacity: 0; }
+        }
+
+        /* Card UI */
         .card {
-            background-color: white;
-            padding: 25px;
-            width: 400px;
-            margin: auto;
-            border-radius: 15px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            padding: 30px 25px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            z-index: 10;
+            position: relative;
+            animation: fadeIn 1s ease;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        p {
+            font-size: 1rem;
+            margin: 10px 0;
+        }
+
         .profit {
-            color: green;
-            font-weight: bold;
+            color: #00ff99;
+            font-weight: 700;
         }
+
         .loss {
-            color: red;
-            font-weight: bold;
+            color: #ff6b6b;
+            font-weight: 700;
         }
-        a {
+
+        a.button {
+            display: inline-block;
+            background: #fff;
+            color: #111;
+            font-weight: 600;
+            padding: 12px 20px;
+            border-radius: 10px;
             text-decoration: none;
-            color: blue;
+            margin-top: 20px;
+            transition: background 0.3s ease;
+        }
+
+        a.button:hover {
+            background: #eee;
+        }
+
+        small {
+            display: block;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 600px) {
+            h2 { font-size: 1.5rem; }
+            p { font-size: 0.95rem; }
+        }
+
+        @media (min-width: 1200px) {
+            .card {
+                max-width: 500px;
+                padding: 40px 30px;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="overlay"></div>
+
     <div class="card">
         <h2>📊 BNB Price Tracker</h2>
         <p>🟡 Binance Price: ₹<strong>{{ binance }}</strong></p>
         <p>🟢 CoinGecko Price: ₹<strong>{{ coingecko }}</strong></p>
 
         {% if profit > 0 %}
-            <p class="profit">📈 Price Difference: ₹{{ profit }} (Arbitrage Possible)</p>
+            <p class="profit">📈 Profit = ₹{{ profit }} (Arbitrage Possible)</p>
         {% else %}
-            <p class="loss">📉 Price Difference: ₹{{ profit }} (No Profit Now)</p>
+            <p class="loss">📉 Loss = ₹{{ profit }} (No Profit Now)</p>
         {% endif %}
 
-        <p><a href="/calculator">💸 Go to Profit Calculator</a></p>
-        <p><small>Auto-refreshes every 60 seconds</small></p>
+        <a class="button" href="/calculator">💸 Profit Calculator</a>
+        <small>⏳ Auto-refreshes every 60 seconds</small>
     </div>
 </body>
 </html>
