@@ -38,8 +38,16 @@ def get_coinmarketcap_bnb_inr_price():
         "convert": "INR"
     }
 
-    response = requests.get(url, headers=headers, params=params)
-    data = response.json()
+   response = requests.get(API_URL)
+if response.status_code == 200:
+    json_data = response.json()
+    if 'data' in json_data:
+        data = json_data['data']
+        # process data
+    else:
+        print("⚠️ 'data' key not found in response")
+else:
+    print("❌ API call failed with:", response.status_code)
     return round(data['data']['BNB']['quote']['INR']['price'], 2)
 
 
