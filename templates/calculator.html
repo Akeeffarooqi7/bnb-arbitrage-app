@@ -1,74 +1,175 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>BNB Arbitrage Calculator</title>
-    <meta http-equiv="refresh" content="60">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            text-align: center;
-            margin-top: 50px;
-        }
-        .card {
-            background-color: white;
-            padding: 25px;
-            width: 450px;
-            margin: auto;
-            border-radius: 15px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-        }
-        .profit {
-            color: green;
-            font-weight: bold;
-        }
-        .alert {
-            color: red;
-            font-weight: bold;
-        }
-        input[type="number"] {
-            width: 150px;
-            padding: 5px;
-            margin: 5px;
-        }
-        button {
-            padding: 6px 12px;
-        }
-        a {
-            text-decoration: none;
-            color: blue;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💸 BNB Arbitrage Calculator</title>
+  <meta http-equiv="refresh" content="60" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', sans-serif;
+      background: url('https://images.unsplash.com/photo-1506157786151-b8491531f063?auto=format&fit=crop&w=1400&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(4px);
+      pointer-events: none;
+      animation: fadeOverlay 1.5s ease-in-out;
+      z-index: 1;
+    }
+
+    @keyframes fadeOverlay {
+      0% { opacity: 0.8; }
+      50% { opacity: 0.3; }
+      100% { opacity: 0; }
+    }
+
+    .wrapper {
+      min-height: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 30px 25px;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+    }
+
+    input[type="number"] {
+      padding: 10px;
+      width: 80%;
+      max-width: 220px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 8px;
+      background-color: #00ff99;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #00cc7a;
+    }
+
+    p {
+      margin: 8px 0;
+      font-size: 1rem;
+    }
+
+    .profit {
+      color: #00ff99;
+      font-weight: 700;
+    }
+
+    .alert {
+      color: #ff6b6b;
+      font-weight: 700;
+    }
+
+    a {
+      text-decoration: none;
+      color: #00bfff;
+      font-weight: 600;
+    }
+
+    small {
+      display: block;
+      margin-top: 15px;
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+
+    @media (max-width: 600px) {
+      h2 {
+        font-size: 1.5rem;
+      }
+      p, input, button {
+        font-size: 0.95rem;
+      }
+      .wrapper {
+        padding: 30px 10px;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div class="overlay"></div>
+
+  <div class="wrapper">
     <div class="card">
-        <h2>💸 BNB Arbitrage Profit Calculator</h2>
+      <h2>💸 BNB Arbitrage Profit Calculator</h2>
 
-        <form method="POST">
-            <label>Investment (₹):</label>
-            <input type="number" name="investment" value="{{ investment }}" min="100" step="100">
-            <button type="submit">Calculate</button>
-        </form>
+      <form method="POST">
+        <label>Investment (₹):</label><br />
+        <input type="number" name="investment" value="{{ investment }}" min="100" step="100" /><br />
+        <button type="submit">Calculate</button>
+      </form>
 
-        <hr>
-        <p>🟡 Binance Price: ₹<strong>{{ binance }}</strong></p>
-        <p>🟢 CoinGecko Price: ₹<strong>{{ coingecko }}</strong></p>
-        <p>📦 BNB Bought: <strong>{{ amount_bnb }}</strong></p>
-        <p>📉 Binance Fee (0.1%): ₹{{ binance_fee }}</p>
-        <p>📈 Sell Fee (0.2%): ₹{{ sell_fee }}</p>
-        <p>🔌 Network Fee: ₹{{ network_fee }}</p>
-        <p>💰 Total Cost: ₹{{ total_cost }}</p>
-        <p>💵 Total Sale: ₹{{ total_sale }}</p>
-        <p class="profit">💸 Final Profit: ₹{{ profit }}</p>
+      <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;" />
 
-        {% if profit > 0 %}
-            <p class="profit">🚀 Opportunity Detected!</p>
-        {% else %}
-            <p class="alert">⚠️ Not Profitable Yet</p>
-        {% endif %}
+      <p>🟡 Binance Price: ₹<strong>{{ binance }}</strong></p>
+      <p>🟢 CoinGecko Price: ₹<strong>{{ coingecko }}</strong></p>
+      <p>📦 BNB Bought: <strong>{{ amount_bnb }}</strong></p>
+      <p>📉 Binance Fee (0.1%): ₹{{ binance_fee }}</p>
+      <p>📈 Sell Fee (0.2%): ₹{{ sell_fee }}</p>
+      <p>🔌 Network Fee: ₹{{ network_fee }}</p>
+      <p>💰 Total Cost: ₹{{ total_cost }}</p>
+      <p>💵 Total Sale: ₹{{ total_sale }}</p>
+      <p class="profit">💸 Final Profit: ₹{{ profit }}</p>
 
-        <p><a href="/tracker">🔁 Go to Price Tracker</a></p>
-        <p><small>Page auto-refreshes every 60 seconds</small></p>
+      {% if profit > 0 %}
+      <p class="profit">🚀 Opportunity Detected!</p>
+      {% else %}
+      <p class="alert">⚠️ Not Profitable Yet</p>
+      {% endif %}
+
+      <p><a href="/tracker">🔁 Go to Price Tracker</a></p>
+      <small>⏳ Auto-refreshes every 60 seconds</small>
     </div>
+  </div>
 </body>
 </html>

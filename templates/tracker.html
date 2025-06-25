@@ -130,9 +130,9 @@
         <p>🟢 CoinGecko Price: ₹<strong>{{ coingecko }}</strong></p>
 
         {% if profit > 0 %}
-            <p class="profit">📈 Profit = ₹{{ profit }} (Arbitrage Possible)</p>
+            <p class="profit">📈 Profit = ₹{{ profit }}</p>
         {% else %}
-            <p class="loss">📉 Loss = ₹{{ profit }} (No Profit Now)</p>
+            <p class="loss">📉 Loss = ₹{{ profit }}</p>
         {% endif %}
 
         <a class="button" href="/calculator">💸 Profit Calculator</a>
