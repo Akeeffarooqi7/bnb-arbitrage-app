@@ -55,10 +55,6 @@ def get_coinmarketcap_bnb_inr_price():
         return 0
 
 
-
-
-
-
 @app.route('/tracker')
 def tracker():
     binance = get_binance_bnb_inr_price()
