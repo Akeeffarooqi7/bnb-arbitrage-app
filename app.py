@@ -1,5 +1,6 @@
-from dotenv import load_dotenv
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 load_dotenv()  # load variables from .env
 COINMARKETCAP_API_KEY = os.getenv("COINMARKETCAP_API_KEY")
