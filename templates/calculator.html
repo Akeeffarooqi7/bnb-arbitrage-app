@@ -102,7 +102,7 @@
 
         small {
             display: block;
-            margin-top: 10px;
+            margin-top: 15px;
             font-size: 0.85rem;
             opacity: 0.8;
         }
@@ -126,7 +126,7 @@
 
     <div class="card">
         <h2>📊 BNB Price Tracker</h2>
-        <p>🟡 Binance Price: ₹<strong>{{ binance }}</strong></p>
+        <p>🟡 Binance Price₹<strong>{{ binance }}</strong></p>
         <p>🟢 CoinGecko Price: ₹<strong>{{ coingecko }}</strong></p>
 
         {% if profit > 0 %}
@@ -136,14 +136,7 @@
         {% endif %}
 
         <a class="button" href="/calculator">💸 Profit Calculator</a>
-
         <small>⏳ Auto-refreshes every 60 seconds</small>
-        <small>👨‍💻 Built by <strong>MOHAMMED AKEEF FAROOQI</strong></small>
-        <small>
-            📸 <a href="https://www.instagram.com/akeef_farooqi7" target="_blank" style="color: #fff; text-decoration: underline;">
-                @akeef_farooqi7
-            </a>
-        </small>
     </div>
 </body>
 </html>
