@@ -57,7 +57,7 @@ def get_coinmarketcap_bnb_inr_price():
 
 @app.route('/')
 def home():
-    return '<h2>✅ BNB Arbitrage App is Running</h2><p><a href="/tracker">📊 Price Tracker</a> | <a href="/calculator">💸 Profit Calculator</a></p>'
+    return render_template('home.html')
 
 
 @app.route('/tracker')
