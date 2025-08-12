@@ -10,20 +10,32 @@ import requests
 
 app = Flask(__name__)
 
-# API to get Binance BNB to INR
-def get_binance_bnb_inr_price():
+# API to get CoinDcx BNB to INR
+def get_coindcx_bnb_inr_price():
     try:
-        url = 'https://api.binance.com/api/v3/ticker/price?symbol=BNBUSDT'
+        # CoinDCX API for all ticker data
+        url = 'https://api.coindcx.com/exchange/ticker'
         response = requests.get(url, timeout=10)
         response.raise_for_status()
-        bnb_usdt = float(response.json()['price'])
-        usdt_inr = 83.2  # Fixed conversion
-        price = round(bnb_usdt * usdt_inr, 2)
-        print("Binance Price:", price)
-        return price
-    except Exception as e:
-        print("Error getting Binance price:", e)
+        data = response.json()
+
+        # Find BNB/INR price
+        for ticker in data:
+            if ticker['market'] == 'BNBINR':
+                price = float(ticker['last_price'])
+                print(f"CoinDCX BNB/INR Live Price: ₹{price}")
+                return price
+
+        print("BNBINR not found in CoinDCX data.")
         return 0
+
+    except Exception as e:
+        print("Error getting CoinDCX price:", e)
+        return 0
+
+# Example usage:
+if __name__ == "__main__":
+    get_coindcx_bnb_inr_price()
 
 # API to get CoinGecko BNB to INR
 def get_coinmarketcap_bnb_inr_price():
@@ -62,36 +74,36 @@ def home():
 
 @app.route('/tracker')
 def tracker():
-    binance = get_binance_bnb_inr_price()
+    coindcx = get_coindcx_bnb_inr_price()
     coingecko = get_coinmarketcap_bnb_inr_price()
-    profit = coingecko - binance
-    return render_template('tracker.html', binance=binance, coingecko=coingecko, profit=profit)
+    profit = coindcx - coingecko
+    return render_template('tracker.html', coindcx=coindcx, coingecko=coingecko, profit=profit)
 
 @app.route('/calculator', methods=['GET', 'POST'])
 def calculator():
     investment = 1000
     try:
-        binance = get_binance_bnb_inr_price()
+        coindcx = get_coindcx_bnb_inr_price()
         coingecko = get_coinmarketcap_bnb_inr_price()
 
         if request.method == 'POST':
             investment = float(request.form.get('investment', 1000))
 
-        amount_bnb = investment / binance if binance else 0
-        binance_fee = round(binance * 0.001 * amount_bnb, 2)
-        sell_fee = round(coingecko * 0.002 * amount_bnb, 2)
+        amount_bnb = investment / coingecko if coingecko else 0
+        buy_fee = round(coingecko * 0.001 * amount_bnb, 2)
+        sell_fee = round(coindcx * 0.002 * amount_bnb, 2)
         network_fee = 50
-        total_cost = round(binance * amount_bnb + binance_fee + network_fee, 2)
-        total_sale = round(coingecko * amount_bnb - sell_fee, 2)
+        total_cost = round(coingecko * amount_bnb + buy_fee + network_fee, 2)
+        total_sale = round(coindcx * amount_bnb - sell_fee, 2)
         profit = round(total_sale - total_cost, 2)
     except Exception as e:
         print("Calculation error:", e)
-        binance = coingecko = profit = amount_bnb = binance_fee = sell_fee = total_cost = total_sale = 0
+        coindcx = coingecko = profit = amount_bnb = buy_fee = sell_fee = total_cost = total_sale = 0
 
     return render_template('calculator.html',
-                           binance=binance, coingecko=coingecko,
+                           coindcx=coindcx, coingecko=coingecko,
                            investment=investment, amount_bnb=round(amount_bnb, 6),
-                           binance_fee=binance_fee, sell_fee=sell_fee,
+                           buy_fee=buy_fee, sell_fee=sell_fee,
                            network_fee=50, total_cost=total_cost,
                            total_sale=total_sale, profit=profit)
 
